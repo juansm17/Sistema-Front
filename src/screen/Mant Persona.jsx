@@ -1,145 +1,135 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import PersonIcon from '@material-ui/icons/Person';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import { TextField } from '@material-ui/core';
+import axios from 'axios';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { useHistory } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  button:{
-    '& > *': {
-     margin:theme.spacing(1,1,0),
-    },
-    
-  },
-}));
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function MantPersona() {
-  const classes = useStyles();
+  const history = useHistory();
+  const [id, setId] = React.useState(0);
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [document, setDocument] = React.useState('');
+  const [disabled, setDisabled] = React.useState(true);
+  const [snackbar, setSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+  const [color, setColor] = React.useState('');
+
+  React.useEffect(() => {
+    const { id_person } = JSON.parse(localStorage.getItem('user'));
+    getUser(id_person);
+    setId(id_person);
+  }, []);
+
+  const handleClose = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbar(false);
+  };
+
+  const getUser = async (idUser) => {
+    const res = await axios.get(`http://localhost:5000/user/${idUser}`);
+    const { name, email, document } = res.data.user;
+    setName(name);
+    setEmail(email);
+    setDocument(document);
+  };
+
+  const enableEditUser = () => {
+    setDisabled(false);
+  };
+
+  const cancelEditUser = () => {
+    setDisabled(true);
+  };
+
+  const editUser = async () => {
+    setDisabled(true);
+    try {
+      const res = await axios.patch(`http://localhost:5000/user/${id}`, {
+        name,
+        email,
+        document
+      });
+      setColor('success');
+      setSnackbar(true);
+      setSnackbarMessage(res.data.message);
+    } catch (e) {
+      setColor('error');
+      setSnackbar(true);
+      setSnackbarMessage(e.response.data.message);
+    }
+  };
+
+  const deleteUser = async () => {
+    try {
+      const res = await axios.delete(`http://localhost:5000/user/${id}`);
+      if (res.data.status === 200) {
+        history.push('/signin');
+        return;
+      }
+    } catch (e) {
+      setColor('error');
+      setSnackbar(true);
+      setSnackbarMessage(e.response.data.message);
+    }
+  }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          < PersonIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Mantenimiento Persona  
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12} >
-              <TextField
-                autoComplete="cedula"
-                name="cedula"
-                variant="outlined"
-                required
-                fullWidth
-                id="cedula"
-                label="Cedula"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} >
-            <TextField
-                autoComplete="fname"
-                name="nombre"
-                variant="outlined"
-                required
-                fullWidth
-                id="nombre"
-                label="Nombre"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="apellido"
-                label="Apellido"
-                name="apellido"
-                autoComplete="apellido"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                 variant="outlined"
-                 required
-                 fullWidth
-                 id="email"
-                 label="Email Address"
-                 name="email"
-                 autoComplete="email"
-              />
-            </Grid>
-            
-          </Grid>
-          <div className={classes.button}>
-          <Button
-          
-            type="submit"
-           
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Eliminar
-          </Button>
-          <Button 
-           className={classes.button}
-            type="submit"
-            
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Guadar
-          </Button>
-          <Button
-            type="submit"
-            
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Buscar
-          </Button>
-          </div>
-          
-          
-         
-        </form>
-      </div>
-      <Box mt={5}>
-      
-      </Box>
-    </Container>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* <CssBaseline />
+      <Avatar className={classes.avatar}>
+        <PostAddIcon />
+      </Avatar>
+      <Typography component="h1" variant="h5">
+        Solicitudes
+      </Typography> */}
+      <Card sx={{ width: '50%', marginTop: 10, backgroundColor: 'white' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 5 }}>
+          <Typography component="h1" variant="h5">
+            Información personal
+          </Typography>
+        </div>
+        <hr style={{ width: '100%', color: 'gray' }} />
+        <CardContent style={{ marginTop: 30 }}>
+          <TextField disabled={disabled} value={name} label='Nombre' onChange={e => setName(e.target.value)} />
+          <TextField disabled={disabled} value={email} label='Correo electrónico' onChange={e => setEmail(e.target.value)} />
+        </CardContent>
+        <CardActions>
+          {
+            disabled ?
+              <>
+                <Button color='primary' onClick={enableEditUser}>Editar Usuario</Button>
+                <Button style={{ color: '#d93442' }} onClick={deleteUser}>Eliminar Usuario</Button>
+              </>
+              :
+              <>
+                <Button color='primary' onClick={editUser}>Confirmar</Button>
+                <Button style={{ color: '#d93442' }} onClick={cancelEditUser}>Cancelar</Button>
+              </>
+          }
+        </CardActions>
+      </Card>
+      <Snackbar
+        open={snackbar}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+      >
+        <Alert severity={color}>{snackbarMessage}</Alert>
+      </Snackbar>
+    </div>
   );
 }
