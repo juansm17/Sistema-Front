@@ -40,7 +40,7 @@ export default function MantPersona() {
   };
 
   const getUser = async (idUser) => {
-    const res = await axios.get(`http://localhost:5000/user/${idUser}`);
+    const res = await axios.get(`https://tesis-app-server.herokuapp.com/user/${idUser}`);
     const { name, email, document } = res.data.user;
     setName(name);
     setEmail(email);
@@ -58,7 +58,7 @@ export default function MantPersona() {
   const editUser = async () => {
     setDisabled(true);
     try {
-      const res = await axios.patch(`http://localhost:5000/user/${id}`, {
+      const res = await axios.patch(`https://tesis-app-server.herokuapp.com/user/${id}`, {
         name,
         email,
         document
@@ -75,7 +75,7 @@ export default function MantPersona() {
 
   const deleteUser = async () => {
     try {
-      const res = await axios.delete(`http://localhost:5000/user/${id}`);
+      const res = await axios.delete(`https://tesis-app-server.herokuapp.com/user/${id}`);
       if (res.data.status === 200) {
         history.push('/signin');
         return;

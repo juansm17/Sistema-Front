@@ -60,7 +60,7 @@ export default function SignUp() {
   const signUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/auth/signup', {
+      const res = await axios.post('https://tesis-app-server.herokuapp.com/auth/signup', {
         name,
         document,
         email,

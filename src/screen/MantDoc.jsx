@@ -24,7 +24,7 @@ export default function MantDoc() {
   const editRequest = async () => {
     setDisabled(true);
     try {
-      const res = await axios.patch(`http://localhost:5000/request/${id}`, {
+      const res = await axios.patch(`https://tesis-app-server.herokuapp.com/request/${id}`, {
         documentType,
         description,
       });

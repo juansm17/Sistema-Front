@@ -59,7 +59,7 @@ export default function SolicitudDoc() {
   const sendRequest = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/request', {
+      const res = await axios.post('https://tesis-app-server.herokuapp.com/request', {
         documentType,
         description,
         idUser: JSON.parse(localStorage.getItem('user')).id_person,

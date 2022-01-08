@@ -73,7 +73,7 @@ export default function VerEstadoDoc() {
   const [color, setColor] = React.useState('');
 
   const getRequests = async () => {
-    const res = await axios.get('http://localhost:5000/request');
+    const res = await axios.get('https://tesis-app-server.herokuapp.com/request');
     setRequests(res.data.requests);
   }
 
@@ -101,7 +101,7 @@ export default function VerEstadoDoc() {
       return;
     } else {
       (async () => {
-        const res = await axios.get(`http://localhost:5000/request/user/${user.id_person}`);
+        const res = await axios.get(`https://tesis-app-server.herokuapp.com/request/user/${user.id_person}`);
         setRequests(res.data.requests);
       })();
     }
@@ -110,7 +110,7 @@ export default function VerEstadoDoc() {
   const getRequestById = async (id) => {
     setModal(true);
     try {
-      const res = await axios.get(`http://localhost:5000/request/${id}`);
+      const res = await axios.get(`https://tesis-app-server.herokuapp.com/request/${id}`);
       const { description } = res.data.request;
       setDescription(description);
       setId(id);
@@ -121,7 +121,7 @@ export default function VerEstadoDoc() {
 
   const editRequest = async () => {
     try {
-      const res = await axios.patch(`http://localhost:5000/request/${id}`, {
+      const res = await axios.patch(`https://tesis-app-server.herokuapp.com/request/${id}`, {
         description
       });
       setModal(false);
@@ -137,7 +137,7 @@ export default function VerEstadoDoc() {
 
   const deleteRequest = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:5000/request/${id}`);
+      const res = await axios.delete(`https://tesis-app-server.herokuapp.com/request/${id}`);
       getRequests();
       setColor('success');
       setSnackbar(true);

@@ -63,7 +63,7 @@ export default function EnvioDoc() {
       }
     };
     try {
-      const res = await axios.put(`http://localhost:5000/request/status/mail/${location.state.idRequest}`,
+      const res = await axios.put(`https://tesis-app-server.herokuapp.com/request/status/mail/${location.state.idRequest}`,
         formData, config);
       setEmail('');
       setDocument(undefined);

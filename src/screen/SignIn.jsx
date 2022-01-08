@@ -55,7 +55,7 @@ export default function SignIn() {
   const signIn = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/auth/signin', {
+      const res = await axios.post('https://tesis-app-server.herokuapp.com/auth/signin', {
         document,
         email,
         key: password,
