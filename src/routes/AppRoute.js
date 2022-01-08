@@ -1,4 +1,4 @@
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import SignIn from "../screen/SignIn";
 import SignUp from "../screen/SignUp";
 import { Dashboard } from "../screen/Dashboard";
@@ -12,6 +12,9 @@ import EstadoDoc from '../screen/Estado';
 const AppRoute = () => {
   return (
     <BrowserRouter>
+      <Route path='/'>
+        <Redirect to='/signin' />
+      </Route>
       <Route path='/signin' component={SignIn} />
       <Route path='/signup' component={SignUp} />
       <Route path='/dashboard' component={Dashboard} />
